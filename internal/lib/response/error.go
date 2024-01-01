@@ -2,7 +2,7 @@ package response
 
 import "net/http"
 
-type M map[string]string
+type M map[string]any
 
 func BadRequest(w http.ResponseWriter, message string) {
 	JSON(w, http.StatusBadRequest, M{"error": message})
