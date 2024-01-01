@@ -2,29 +2,35 @@ package model
 
 type Order struct {
 	Base
-	Number     uint
-	PriceLimit uint
-	Comment    string
-	Address    string
-	Status     OrderStatus
+	Number     int         `json:"number"`
+	PriceLimit int         `json:"price_limit"`
+	Comment    string      `json:"comment"`
+	Address    string      `json:"address"`
+	Status     OrderStatus `json:"status"`
 
-	Customer       *Customer
-	Employee       *Employee
-	Configurations Configurations
+	CustomerID string    `json:"customer_id"`
+	Customer   *Customer `json:"-"`
+
+	EmployeeID string    `json:"employee_id"`
+	Employee   *Employee `json:"-"`
+
+	Configurations Configurations `json:"configurations,omitempty"`
 }
 
-type OrderStatus uint
+type Orders []Order
+
+type OrderStatus int
 
 func (s OrderStatus) String() string {
 	return orderTypeNames[s]
 }
 
 const (
-	OrderStatus_InProcess OrderStatus = iota
-	OrderStatus_Completed
+	OrderStatusInProcess OrderStatus = iota
+	OrderStatusCompleted
 )
 
 var orderTypeNames = map[OrderStatus]string{
-	OrderStatus_InProcess: "In process",
-	OrderStatus_Completed: "Completed",
+	OrderStatusInProcess: "In process",
+	OrderStatusCompleted: "Completed",
 }

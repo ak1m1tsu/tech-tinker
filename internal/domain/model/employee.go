@@ -9,13 +9,16 @@ type Employee struct {
 	Email          string
 	Role           EmployeeRole
 	HashedPassword HashedPassword
+
+	Orders Orders
 }
+
+type Employees []Employee
 
 type HashedPassword []byte
 
-func (hp HashedPassword) FromPassword(password string) {
-	bcryptPassword, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	hp = HashedPassword(bcryptPassword)
+func (hp *HashedPassword) FromPassword(password string) {
+	*hp, _ = bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 }
 
 func (hp HashedPassword) Compare(password string) bool {
@@ -30,13 +33,13 @@ func (e EmployeeRole) String() string {
 }
 
 const (
-	Manager EmployeeRole = iota
-	Technician
-	Administrator
+	EmployeeRoleManager EmployeeRole = iota
+	EmployeeRoleTechnician
+	EmployeeRoleAdministrator
 )
 
 var employeeRoleNames = map[EmployeeRole]string{
-	Manager:       "Manager",
-	Technician:    "Technician",
-	Administrator: "Administrator",
+	EmployeeRoleManager:       "EmployeeRoleManager",
+	EmployeeRoleTechnician:    "EmployeeRoleTechnician",
+	EmployeeRoleAdministrator: "EmployeeRoleAdministrator",
 }

@@ -26,15 +26,15 @@ func (t BudgetType) String() string {
 }
 
 const (
-	BudgetType_LowerThan50K BudgetType = iota
-	BudgetType_Between50KAnd100K
-	BudgetType_Between100KAnd500K
-	BudgetType_Greater500K
+	BudgetTypeLowerThan50K BudgetType = iota
+	BudgetTypeBetween50KAnd100K
+	BudgetTypeBetween100KAnd500K
+	BudgetTypeGreaterThan500K
 )
 
 var budgetTypeNames = map[BudgetType]string{
-	BudgetType_LowerThan50K:       "Lower than 50K",
-	BudgetType_Between50KAnd100K:  "Between 50K and 100K",
-	BudgetType_Between100KAnd500K: "Between 100K and 500K",
-	BudgetType_Greater500K:        "Greater than 500K",
+	BudgetTypeLowerThan50K:       "Lower than 50K",
+	BudgetTypeBetween50KAnd100K:  "Between 50K and 100K",
+	BudgetTypeBetween100KAnd500K: "Between 100K and 500K",
+	BudgetTypeGreaterThan500K:    "Greater than 500K",
 }
