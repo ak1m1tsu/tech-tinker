@@ -27,3 +27,8 @@ func Forbidden(w http.ResponseWriter) {
 	message := "forbidden"
 	JSON(w, http.StatusForbidden, M{"error": message})
 }
+
+func MethodNotAllowed(w http.ResponseWriter) {
+	message := "method not allowed"
+	JSON(w, http.StatusMethodNotAllowed, M{"error": message})
+}

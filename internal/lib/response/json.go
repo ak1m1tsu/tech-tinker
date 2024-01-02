@@ -6,8 +6,8 @@ import (
 	"net/http"
 )
 
-func JSON(w http.ResponseWriter, code int, data interface{}) {
-	var buf *bytes.Buffer
+func JSON(w http.ResponseWriter, code int, data M) {
+	buf := new(bytes.Buffer)
 	err := decoder.EncodeJSON(buf, data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
