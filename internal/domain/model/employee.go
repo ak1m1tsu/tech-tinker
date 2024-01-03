@@ -39,7 +39,7 @@ const (
 )
 
 var employeeRoleNames = map[EmployeeRole]string{
-	EmployeeRoleManager:       "EmployeeRoleManager",
-	EmployeeRoleTechnician:    "EmployeeRoleTechnician",
-	EmployeeRoleAdministrator: "EmployeeRoleAdministrator",
+	EmployeeRoleManager:       "Manager",
+	EmployeeRoleTechnician:    "Technician",
+	EmployeeRoleAdministrator: "Administrator",
 }
