@@ -28,10 +28,10 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
-      color: CupertinoColors.black,
+      color: CupertinoColors.darkBackgroundGray,
       progressIndicator: const CircularProgressIndicator(
-        color: CupertinoColors.black,
-        backgroundColor: CupertinoColors.black,
+        color: CupertinoColors.darkBackgroundGray,
+        backgroundColor: CupertinoColors.darkBackgroundGray,
       ),
       inAsyncCall: _isAPICallProcess,
       child: Form(
@@ -47,7 +47,7 @@ class _LoginFormState extends State<LoginForm> {
                 decoration: const InputDecoration(
                   prefixIcon: Icon(
                     Icons.email,
-                    color: CupertinoColors.black,
+                    color: CupertinoColors.darkBackgroundGray,
                     size: 28,
                   ),
                   border: UnderlineInputBorder(),
@@ -74,7 +74,7 @@ class _LoginFormState extends State<LoginForm> {
                 decoration: InputDecoration(
                   prefixIcon: const Icon(
                     Icons.key,
-                    color: CupertinoColors.black,
+                    color: CupertinoColors.darkBackgroundGray,
                     size: 28,
                   ),
                   suffixIcon: IconButton(
@@ -87,7 +87,7 @@ class _LoginFormState extends State<LoginForm> {
                       _passwordVisible
                           ? CupertinoIcons.eye
                           : CupertinoIcons.eye_slash,
-                      color: CupertinoColors.black,
+                      color: CupertinoColors.darkBackgroundGray,
                     ),
                   ),
                   border: const UnderlineInputBorder(),
@@ -120,7 +120,7 @@ class _LoginFormState extends State<LoginForm> {
                   textStyle: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
-                    color: CupertinoColors.black,
+                    color: CupertinoColors.darkBackgroundGray,
                   ),
                 ),
                 onPressed: () {
@@ -145,7 +145,7 @@ class _LoginFormState extends State<LoginForm> {
                 child: const Text(
                   "Login",
                   style: TextStyle(
-                    color: CupertinoColors.black,
+                    color: CupertinoColors.darkBackgroundGray,
                   ),
                 ),
               ),

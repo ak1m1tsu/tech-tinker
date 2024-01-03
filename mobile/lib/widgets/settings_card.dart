@@ -7,8 +7,8 @@ class SettingsCard extends StatelessWidget {
     required this.text,
     required this.icon,
     required this.onTap,
-    this.textColor = CupertinoColors.black,
-    this.backgroundColor = CupertinoColors.white,
+    this.textColor = CupertinoColors.darkBackgroundGray,
+    this.backgroundColor = CupertinoColors.extraLightBackgroundGray,
   });
 
   final String text;
