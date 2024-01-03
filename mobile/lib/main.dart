@@ -2,14 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tech_tinker/constants.dart';
 import 'package:tech_tinker/screens/home_screen.dart';
+import 'package:tech_tinker/screens/login_screen.dart';
 
-Widget _defaultHome = const Scaffold();
+Widget _defaultWelcomeScreen = const LoginScreen();
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (true) {
-    _defaultHome = const HomeScreen();
+  if (false) {
+    _defaultWelcomeScreen = const HomeScreen();
   }
 
   runApp(const TechTinkerApp());
@@ -28,9 +29,9 @@ class TechTinkerApp extends StatelessWidget {
         useMaterial3: true,
       ),
       routes: {
-        "/": (context) => _defaultHome,
+        "/": (context) => _defaultWelcomeScreen,
         "/home": (context) => const HomeScreen(),
-        "/login": (context) => const Scaffold(),
+        "/login": (context) => const LoginScreen(),
       },
     );
   }

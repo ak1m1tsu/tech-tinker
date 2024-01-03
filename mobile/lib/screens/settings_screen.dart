@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tech_tinker/widgets/settings_card.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -24,27 +25,17 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                color: CupertinoColors.white,
-                child: ListTile(
-                  onTap: () {},
-                  title: const Text(
-                    "Logout",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18,
-                      color: CupertinoColors.systemRed,
-                    ),
-                  ),
-                  leading: const Icon(
-                    Icons.exit_to_app,
-                    size: 30,
-                    color: CupertinoColors.systemRed,
-                  ),
-                ),
+              SettingsCard(
+                text: "Logout",
+                icon: Icons.exit_to_app,
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    "/login",
+                    (route) => false,
+                  );
+                },
+                textColor: CupertinoColors.systemRed,
               ),
             ],
           ),
