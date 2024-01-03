@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 	"github.com/insan1a/tech-tinker/internal/delivery/http/controller/account"
 	"github.com/insan1a/tech-tinker/internal/delivery/http/controller/router"
 	"github.com/insan1a/tech-tinker/internal/delivery/http/middleware/jsonlogger"
@@ -22,6 +23,14 @@ func Start() error {
 	mux.NotFound(router.NotFoundHandler)
 	mux.MethodNotAllowed(router.MethodNotAllowedHandler)
 
+	mux.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	}))
 	mux.Use(jsonlogger.New)
 	account.MountRoutes(mux)
 
