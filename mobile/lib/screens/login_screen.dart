@@ -14,7 +14,7 @@ class LoginScreen extends StatelessWidget {
         title: const Text(
           appName,
           style: TextStyle(
-            color: CupertinoColors.activeBlue,
+            color: CupertinoColors.extraLightBackgroundGray,
             fontWeight: FontWeight.bold,
             fontSize: 32,
           ),

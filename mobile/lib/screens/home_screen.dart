@@ -38,14 +38,13 @@ class _HomeScreenState extends State<HomeScreen> {
         iconSize: 32,
         showSelectedLabels: false,
         unselectedItemColor: CupertinoColors.systemGrey,
-        selectedItemColor: CupertinoColors.activeBlue,
+        selectedItemColor: CupertinoColors.darkBackgroundGray,
         selectedIconTheme: const IconThemeData(
-          color: CupertinoColors.activeBlue,
-          size: 36,
+          color: CupertinoColors.darkBackgroundGray,
         ),
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.news),
+            icon: Icon(CupertinoIcons.house_fill),
             label: "Orders",
           ),
           BottomNavigationBarItem(

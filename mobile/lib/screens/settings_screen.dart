@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tech_tinker/api/auth.dart';
 import 'package:tech_tinker/widgets/settings_card.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -29,6 +30,7 @@ class SettingsScreen extends StatelessWidget {
                 text: "Logout",
                 icon: Icons.exit_to_app,
                 onTap: () {
+                  AuthCache.logout();
                   Navigator.pushNamedAndRemoveUntil(
                     context,
                     "/login",

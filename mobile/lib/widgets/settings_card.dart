@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SettingsCard extends StatelessWidget {
-  SettingsCard({
+  const SettingsCard({
     super.key,
     required this.text,
     required this.icon,
@@ -14,9 +14,8 @@ class SettingsCard extends StatelessWidget {
   final String text;
   final IconData icon;
   final GestureTapCallback? onTap;
-
-  Color backgroundColor;
-  Color textColor;
+  final Color backgroundColor;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {

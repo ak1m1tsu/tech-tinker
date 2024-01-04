@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:tech_tinker/api/auth.dart';
 import 'package:tech_tinker/constants.dart';
 import 'package:tech_tinker/screens/home_screen.dart';
 import 'package:tech_tinker/screens/login_screen.dart';
 
 Widget _defaultWelcomeScreen = const LoginScreen();
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (false) {
+  if (await AuthCache.isLoggedIn()) {
     _defaultWelcomeScreen = const HomeScreen();
   }
 
@@ -33,6 +35,7 @@ class TechTinkerApp extends StatelessWidget {
         "/home": (context) => const HomeScreen(),
         "/login": (context) => const LoginScreen(),
       },
+      builder: EasyLoading.init(),
     );
   }
 }
