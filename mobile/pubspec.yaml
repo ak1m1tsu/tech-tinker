@@ -17,6 +17,8 @@ dependencies:
   flutter_easyloading: ^3.0.5
   money_formatter: ^0.0.5
   intl: ^0.18.1
+  syncfusion_flutter_charts: ^24.1.44+1
+  syncfusion_flutter_datepicker: ^24.1.44
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:money_formatter/money_formatter.dart';
 import 'package:tech_tinker/models/configuration.dart';
+import 'package:tech_tinker/widgets/ruble_formatter.dart';
 
 class ConfigurationCard extends StatefulWidget {
   final Configuration configuration;
@@ -41,12 +41,7 @@ class _ConfigurationCardState extends State<ConfigurationCard> {
             ),
           ),
           title: Text(
-            MoneyFormatter(
-              amount: widget.configuration.price / 100,
-              settings: MoneyFormatterSettings(
-                symbol: "₽",
-              ),
-            ).output.symbolOnRight,
+            RubleFormatter.format(widget.configuration.price / 100),
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,

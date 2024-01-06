@@ -4,6 +4,7 @@ import 'package:tech_tinker/constants.dart';
 import 'package:tech_tinker/screens/orders_screen.dart';
 import 'package:tech_tinker/screens/profile_screen.dart';
 import 'package:tech_tinker/screens/settings_screen.dart';
+import 'package:tech_tinker/screens/statistics_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,11 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   static const List<Widget> _widgets = <Widget>[
     OrdersScreen(),
-    Scaffold(
-      body: Center(
-        child: Text("statistics"),
-      ),
-    ),
+    StatisticsScreen(),
     ProfileScreen(),
     SettingsScreen(),
   ];

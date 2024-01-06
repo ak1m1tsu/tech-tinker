@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:money_formatter/money_formatter.dart';
 import 'package:tech_tinker/models/order.dart';
 import 'package:tech_tinker/widgets/app_bar.dart';
 import 'package:tech_tinker/widgets/configuration_list_view.dart';
 import 'package:tech_tinker/widgets/customer_card.dart';
+import 'package:tech_tinker/widgets/ruble_formatter.dart';
 import 'package:tech_tinker/widgets/screen.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -69,13 +69,11 @@ class _OrderScreenState extends State<OrderScreen> {
             children: [
               ListTile(
                 leading: const Icon(
-                  CupertinoIcons.money_rubl,
+                  Icons.money,
                   size: 28,
                 ),
                 title: Text(
-                  MoneyFormatter(
-                    amount: widget.order.priceLimit / 100,
-                  ).output.nonSymbol,
+                  RubleFormatter.format(widget.order.priceLimit / 100),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,

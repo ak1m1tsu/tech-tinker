@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:money_formatter/money_formatter.dart';
 import 'package:tech_tinker/models/order.dart';
 import 'package:tech_tinker/screens/order_screen.dart';
 import 'package:tech_tinker/widgets/order_status_badge.dart';
+import 'package:tech_tinker/widgets/ruble_formatter.dart';
 
 class OrderCard extends StatelessWidget {
   final Order order;
@@ -30,12 +30,7 @@ class OrderCard extends StatelessWidget {
             ),
           ),
           subtitle: Text(
-            MoneyFormatter(
-              amount: order.priceLimit / 100,
-              settings: MoneyFormatterSettings(
-                symbol: "₽",
-              ),
-            ).output.symbolOnRight,
+            RubleFormatter.format(order.priceLimit / 100),
             style: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 16,
