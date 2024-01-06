@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tech_tinker/constants.dart';
+import 'package:tech_tinker/screens/orders_screen.dart';
 import 'package:tech_tinker/screens/profile_screen.dart';
 import 'package:tech_tinker/screens/settings_screen.dart';
 
@@ -13,11 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   static const List<Widget> _widgets = <Widget>[
-    Scaffold(
-      body: Center(
-        child: Text("orders"),
-      ),
-    ),
+    OrdersScreen(),
     Scaffold(
       body: Center(
         child: Text("statistics"),
@@ -30,6 +28,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: CupertinoColors.darkBackgroundGray,
+        title: const Text(
+          appName,
+          style: TextStyle(
+            color: CupertinoColors.extraLightBackgroundGray,
+            fontWeight: FontWeight.bold,
+            fontSize: 32,
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: IndexedStack(
         index: _selectedIndex,
         children: _widgets,

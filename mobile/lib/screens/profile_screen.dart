@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tech_tinker/models/configuration.dart';
+import 'package:tech_tinker/models/customer.dart';
+import 'package:tech_tinker/models/order.dart';
+import 'package:tech_tinker/widgets/order_list_view.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -7,12 +11,8 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30,
-          vertical: 10,
-        ),
+        padding: const EdgeInsets.all(20),
         child: Center(
           child: Column(
             children: [
@@ -62,7 +62,31 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const Placeholder(),
+              OrderListView(orders: [
+                Order(
+                  address: "address",
+                  comment: "comment",
+                  configurations: [
+                    Configuration(
+                      createdAt: DateTime.now(),
+                      id: "id",
+                      price: 15000000,
+                    )
+                  ],
+                  createdAt: DateTime.now(),
+                  customer: Customer(
+                    id: '',
+                    email: 'ivan.ivanov@gmail.com',
+                    phoneNumber: '88005553535',
+                    firstName: 'Ivan',
+                    lastName: 'Ivanov',
+                  ),
+                  id: "",
+                  number: 1,
+                  priceLimit: 15000000,
+                  status: "In Process",
+                )
+              ]),
             ],
           ),
         ),
