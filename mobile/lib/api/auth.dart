@@ -4,6 +4,7 @@ import 'package:api_cache_manager/api_cache_manager.dart';
 import 'package:api_cache_manager/models/cache_db_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:tech_tinker/constants.dart';
+import 'package:tech_tinker/models/login_details.dart';
 
 class AuthService {
   static var client = http.Client();
@@ -24,7 +25,9 @@ class AuthService {
     );
 
     if (resp.statusCode == 200) {
-      return await AuthCache.setLoginDetails(resp.body);
+      var body = json.decode(resp.body);
+      var loginDetails = LoginDetails.fromJson(body["data"]);
+      return await AuthCache.setLoginDetails(loginDetails);
     }
 
     return false;
@@ -38,20 +41,20 @@ class AuthCache {
     return await APICacheManager().isAPICacheKeyExist(loginDetailsKey);
   }
 
-  static Future<String?> loginDetails() async {
+  static Future<LoginDetails?> loginDetails() async {
     if (await AuthCache.isLoggedIn()) {
       var cacheData = await APICacheManager().getCacheData(loginDetailsKey);
 
-      return cacheData.syncData;
+      return LoginDetails.fromRawJson(cacheData.syncData);
     }
 
     return null;
   }
 
-  static Future<bool> setLoginDetails(String? data) async {
+  static Future<bool> setLoginDetails(LoginDetails data) async {
     var cache = APICacheDBModel(
       key: loginDetailsKey,
-      syncData: data!,
+      syncData: data.toRawJson(),
     );
 
     return await APICacheManager().addCacheData(cache);

@@ -16,30 +16,30 @@ class BudgetCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       child: Card(
-        color: color,
+        color: CupertinoColors.extraLightBackgroundGray,
         child: ListTile(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          leading: const Icon(
+          leading: Icon(
             CupertinoIcons.device_desktop,
             size: 28,
-            color: CupertinoColors.darkBackgroundGray,
+            color: color,
           ),
           title: Text(
             budget.type,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
-              color: CupertinoColors.darkBackgroundGray,
+              color: color,
             ),
           ),
           trailing: Text(
             "${budget.count}",
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
-              color: CupertinoColors.darkBackgroundGray,
+              color: color,
             ),
           ),
         ),

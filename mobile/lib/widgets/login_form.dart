@@ -134,7 +134,7 @@ class _LoginFormState extends State<LoginForm> {
                             content: Text(
                               "Invalid login credentials",
                               style: TextStyle(
-                                color: CupertinoColors.destructiveRed,
+                                color: CupertinoColors.systemRed,
                               ),
                             ),
                           ),
@@ -148,7 +148,22 @@ class _LoginFormState extends State<LoginForm> {
                         (route) => false,
                       );
                     },
-                  );
+                  ).catchError((err) {
+                    EasyLoading.dismiss();
+
+                    print(err);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          "Server do not response",
+                          style: TextStyle(
+                            color: CupertinoColors.systemRed,
+                          ),
+                        ),
+                      ),
+                    );
+                  });
                 }
               },
               child: const Text(

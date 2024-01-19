@@ -32,7 +32,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     statistics = Statistics.fromRawJson("""{
       "budgets": [
         {
-          "count": 6,
+          "count": 1,
           "type": "Lower than 50K"
         },
         {
@@ -60,8 +60,6 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           ),
         )
         .toList();
-
-    print("FROM ${statistics.from} | TO ${statistics.to}");
     super.initState();
   }
 
