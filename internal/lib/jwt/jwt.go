@@ -7,13 +7,23 @@ import (
 	"time"
 )
 
-func GenerateToken(claims *Claims, ttl time.Duration, key *rsa.PrivateKey) (string, error) {
-	now := time.Now().UTC()
+type Employee struct {
+	ID   string `json:"id"`
+	Role string `json:"role"`
+}
 
-	claims.RegisteredClaims.ExpiresAt = jwt.NewNumericDate(now.Add(ttl))
-	claims.RegisteredClaims.IssuedAt = jwt.NewNumericDate(now)
-	claims.RegisteredClaims.NotBefore = jwt.NewNumericDate(now)
-	claims.RegisteredClaims.ID = uuid.NewString()
+func GenerateToken(employee *Employee, ttl time.Duration, key *rsa.PrivateKey) (string, error) {
+	now := time.Now().UTC()
+	claims := &Claims{
+		EmployeeID:   employee.ID,
+		EmployeeRole: employee.Role,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(now.Add(ttl)),
+			IssuedAt:  jwt.NewNumericDate(now),
+			NotBefore: jwt.NewNumericDate(now),
+			ID:        uuid.NewString(),
+		},
+	}
 
 	token, err := jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString(key)
 	if err != nil {

@@ -4,9 +4,11 @@ import (
 	"context"
 	"errors"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	"github.com/insan1a/tech-tinker/internal/delivery/http/controller/account"
-	"github.com/insan1a/tech-tinker/internal/delivery/http/controller/router"
+	"github.com/insan1a/tech-tinker/internal/delivery/http/controllers/account"
+	"github.com/insan1a/tech-tinker/internal/delivery/http/controllers/auth"
+	"github.com/insan1a/tech-tinker/internal/delivery/http/controllers/router"
 	"github.com/insan1a/tech-tinker/internal/delivery/http/middleware/jsonlogger"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
@@ -19,6 +21,10 @@ import (
 )
 
 func Start() error {
+	cfg, err := newConfig()
+	if err != nil {
+		return err
+	}
 	mux := chi.NewMux()
 	mux.NotFound(router.NotFoundHandler)
 	mux.MethodNotAllowed(router.MethodNotAllowedHandler)
@@ -32,7 +38,25 @@ func Start() error {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 	mux.Use(jsonlogger.New)
-	account.MountRoutes(mux)
+	mux.Use(middleware.Recoverer)
+
+	err = auth.MountRoutes(
+		auth.NewConfig().
+			WithRSAPrivateKey(cfg.RSA.privateKey),
+		mux,
+	)
+	if err != nil {
+		return err
+	}
+
+	err = account.MountRoutes(
+		account.NewConfig().
+			WithRSAPublicKey(cfg.RSA.publicKey),
+		mux,
+	)
+	if err != nil {
+		return err
+	}
 
 	srv := http.Server{
 		Handler:      mux,
@@ -40,7 +64,7 @@ func Start() error {
 		WriteTimeout: time.Second * 5,
 		ReadTimeout:  time.Second * 5,
 		IdleTimeout:  time.Minute,
-		ErrorLog:     slog.NewLogLogger(slog.NewJSONHandler(os.Stderr, nil), slog.LevelError),
+		ErrorLog:     slog.NewLogLogger(slog.NewTextHandler(os.Stderr, nil), slog.LevelError),
 	}
 
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
