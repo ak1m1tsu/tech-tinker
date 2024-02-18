@@ -2,12 +2,12 @@ package model
 
 type Component struct {
 	Base
-	Name        string
-	Description string
-	Price       int
-	Type        ComponentType
+	Name        string        `db:"name"`
+	Description string        `db:"description"`
+	Price       int           `db:"price"`
+	Type        ComponentType `db:"type"`
 
-	ConfigurationID string
+	ConfigurationID string `db:"configuration_id"`
 	Configuration   *Configuration
 }
 

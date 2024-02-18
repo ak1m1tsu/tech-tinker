@@ -11,6 +11,8 @@ import (
 	"syscall"
 
 	"github.com/ak1m1tsu/go-libs/connector/postgresql"
+	"github.com/go-chi/chi/v5"
+	authcontroller "github.com/insan1a/tech-tinker/internal/delivery/http/controllers/auth"
 	"github.com/insan1a/tech-tinker/internal/delivery/http/router"
 	authservice "github.com/insan1a/tech-tinker/internal/domain/services/auth"
 	emprepo "github.com/insan1a/tech-tinker/internal/repository/employee"
@@ -46,11 +48,15 @@ func Run() error {
 		repo,
 	)
 
-	mux := router.New()
-	mux.MountAuthRoutes(service)
+	controller := authcontroller.New(service)
+
+	r := router.New()
+	r.Route("/auth", func(r chi.Router) {
+		r.Post("/token", controller.HandleAuthToken)
+	})
 
 	srv := http.Server{
-		Handler:      mux,
+		Handler:      r,
 		Addr:         fmt.Sprintf("%s:%s", cfg.HTTP.Host, cfg.HTTP.Port),
 		WriteTimeout: cfg.HTTP.Timeout,
 		ReadTimeout:  cfg.HTTP.Timeout,

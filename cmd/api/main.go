@@ -9,6 +9,7 @@ import (
 
 func init() {
 	logrus.SetFormatter(new(logrus.TextFormatter))
+	logrus.SetLevel(logrus.DebugLevel)
 	logrus.SetOutput(os.Stdout)
 }
 

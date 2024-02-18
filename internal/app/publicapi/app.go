@@ -10,9 +10,11 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 
+	accountcontroller "github.com/insan1a/tech-tinker/internal/delivery/http/controllers/account"
 	"github.com/insan1a/tech-tinker/internal/delivery/http/middleware/jwtvalidation"
 	"github.com/insan1a/tech-tinker/internal/delivery/http/router"
 )
@@ -23,12 +25,21 @@ func Run() error {
 		return err
 	}
 
-	mux := router.New()
-	mux.Use(jwtvalidation.New(cfg.RSA.PublicKey))
-	mux.MountAccountRoutes()
+	controller := accountcontroller.New()
+
+	r := router.New()
+	r.Use(jwtvalidation.New(cfg.RSA.PublicKey))
+	r.Route("/account", func(r chi.Router) {
+		r.Get("/", controller.HandleAccountInfo)
+		r.Post("/stat", controller.HandleAccountStatistic)
+		r.Route("/orders", func(r chi.Router) {
+			r.Get("/", controller.HandleAccountOrders)
+			r.Get("/{orderID}", controller.HandleAccountOrder)
+		})
+	})
 
 	srv := http.Server{
-		Handler:      mux,
+		Handler:      r,
 		Addr:         fmt.Sprintf("%s:%s", cfg.HTTP.Host, cfg.HTTP.Port),
 		WriteTimeout: cfg.HTTP.Timeout,
 		ReadTimeout:  cfg.HTTP.Timeout,

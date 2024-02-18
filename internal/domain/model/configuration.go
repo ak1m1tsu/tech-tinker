@@ -2,12 +2,12 @@ package model
 
 type Configuration struct {
 	Base
-	Price int
+	Price int `db:"price"`
 
-	OrderID string
+	OrderID string `db:"order_id"`
 	Order   *Order
 
-	EmployeeID string
+	EmployeeID string `db:"employee_id"`
 	Employee   *Employee
 
 	Components Components

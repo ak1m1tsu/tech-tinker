@@ -2,19 +2,19 @@ package model
 
 type Order struct {
 	Base
-	Number     int         `json:"number"`
-	PriceLimit int         `json:"price_limit"`
-	Comment    string      `json:"comment"`
-	Address    string      `json:"address"`
-	Status     OrderStatus `json:"status"`
+	Number     int         `db:"number"`
+	PriceLimit int         `db:"price_limit"`
+	Comment    string      `db:"comment"`
+	Address    string      `db:"address"`
+	Status     OrderStatus `db:"status"`
 
-	CustomerID string    `json:"customer_id"`
-	Customer   *Customer `json:"-"`
+	CustomerID string `db:"customer_id"`
+	Customer   *Customer
 
-	EmployeeID string    `json:"employee_id"`
-	Employee   *Employee `json:"-"`
+	EmployeeID string `db:"employee_id"`
+	Employee   *Employee
 
-	Configurations Configurations `json:"configurations,omitempty"`
+	Configurations Configurations
 }
 
 type Orders []Order

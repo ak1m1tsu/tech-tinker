@@ -1,6 +1,6 @@
 http:
   host: 0.0.0.0
-  port: 8420
+  port: 3802
   timeout: 5s
 rsa:
   private_key: /etc/auth-api/private.pem

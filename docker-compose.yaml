@@ -5,7 +5,7 @@ networks:
 
 services:
   proxy:
-    container_name: "tech-tinker_proxy"
+    container_name: "api_proxy"
     image: nginx:latest
     ports:
       - 80:80
@@ -33,3 +33,4 @@ services:
     env_file: .env
     networks:
       - intranet
+    restart: unless-stopped

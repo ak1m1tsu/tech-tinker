@@ -32,12 +32,17 @@ func PrivateKeyFromFile(path string) (*rsa.PrivateKey, error) {
 		return nil, err
 	}
 
-	key, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
 	if err != nil {
 		return nil, err
 	}
 
-	return key, nil
+	switch key := key.(type) {
+	case *rsa.PrivateKey:
+		return key, nil
+	default:
+		return nil, err
+	}
 }
 
 func readBlockFromFile(path string) (*pem.Block, error) {

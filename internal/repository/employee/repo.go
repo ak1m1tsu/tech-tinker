@@ -7,6 +7,7 @@ import (
 	"github.com/ak1m1tsu/go-libs/connector/postgresql"
 	"github.com/insan1a/tech-tinker/internal/domain/interfaces"
 	"github.com/insan1a/tech-tinker/internal/domain/model"
+	"github.com/sirupsen/logrus"
 )
 
 var _ interfaces.EmployeeRepo = &Repo{}
@@ -24,7 +25,7 @@ func (r *Repo) GetByEmail(ctx context.Context, email string) (*model.Employee, e
 	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
 
 	sql, args, err := psql.
-		Select("id", "email", "first_name", "last_name", "role", "hashed_password", "created_at", "updated_at", "deleted_at").
+		Select("id", "email", "first_name", "last_name", "role", "password", "created_at", "updated_at", "deleted_at").
 		From("employee").
 		Where(sq.Eq{"email": email}).
 		ToSql()
@@ -32,8 +33,10 @@ func (r *Repo) GetByEmail(ctx context.Context, email string) (*model.Employee, e
 		return nil, err
 	}
 
+	logrus.Debug(sql, args)
+
 	var e model.Employee
-	if err = r.conn.QueryRow(ctx, sql, args).Scan(
+	if err = r.conn.QueryRow(ctx, sql, args...).Scan(
 		&e.ID,
 		&e.Email,
 		&e.FirstName,
