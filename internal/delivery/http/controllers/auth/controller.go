@@ -49,6 +49,14 @@ func (c *Controller) HandleAuthToken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !e.HashedPassword.Compare(input.Password) {
+		log.Info("invalid password from user")
+
+		response.Unauthorized(w)
+
+		return
+	}
+
 	token, err := c.service.CreateToken(ctx, e)
 	if err != nil {
 		log.WithError(err).WithField("email", e.Email).Error("failed to create token for user")

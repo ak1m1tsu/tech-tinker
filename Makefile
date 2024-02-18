@@ -1,7 +1,7 @@
-.PHONY: build
-build:
-	go build -o bin/tech-tinker-api ./cmd/app/main.go
+.PHONY: up
+up:
+	docker compose up -d --build
 
-.PHONY: run
-run: build
-	./bin/tech-tinker-api
+.PHONY: down
+down:
+	docker compose down --rmi local
