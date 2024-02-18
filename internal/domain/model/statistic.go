@@ -19,7 +19,7 @@ type Budget struct {
 	Type  BudgetType
 }
 
-type BudgetType uint
+type BudgetType uint8
 
 func (t BudgetType) String() string {
 	return budgetTypeNames[t]

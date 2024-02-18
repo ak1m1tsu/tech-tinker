@@ -4,3 +4,11 @@ http:
   timeout: 5s
 rsa:
   public_key: /etc/tech-tinker/public.pem
+cache:
+  ttl: 10m
+  size: 1000
+db:
+  pool_size: 10
+  connection_attempts: 5
+  connection_timeout: 5s
+  retry_delay: 1s

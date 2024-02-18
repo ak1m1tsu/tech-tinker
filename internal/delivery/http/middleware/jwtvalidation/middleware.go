@@ -3,11 +3,12 @@ package jwtvalidation
 import (
 	"context"
 	"crypto/rsa"
+	"net/http"
+	"strings"
+
 	"github.com/insan1a/tech-tinker/internal/lib/jwt"
 	"github.com/insan1a/tech-tinker/internal/lib/response"
 	"github.com/sirupsen/logrus"
-	"net/http"
-	"strings"
 )
 
 const headerPrefix = "Bearer "

@@ -21,6 +21,7 @@ services:
     build:
       context: .
       dockerfile: ./build/api/Dockerfile
+    env_file: .env
     networks:
       - intranet
     restart: unless-stopped
@@ -29,5 +30,6 @@ services:
     build:
       context: .
       dockerfile: ./build/auth/Dockerfile
+    env_file: .env
     networks:
       - intranet

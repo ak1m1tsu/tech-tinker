@@ -19,7 +19,7 @@ type Order struct {
 
 type Orders []Order
 
-type OrderStatus int
+type OrderStatus uint8
 
 func (s OrderStatus) String() string {
 	return orderTypeNames[s]

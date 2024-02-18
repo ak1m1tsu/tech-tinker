@@ -3,4 +3,12 @@ http:
   port: 8420
   timeout: 5s
 rsa:
-  private_key: /etc/tech-tinker/private.pem
+  private_key: /etc/auth-api/private.pem
+cache:
+  ttl: 10m
+  size: 1000
+db:
+  pool_size: 10
+  connection_attempts: 5
+  connection_timeout: 5s
+  retry_delay: 1s

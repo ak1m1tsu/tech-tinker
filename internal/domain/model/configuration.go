@@ -2,9 +2,14 @@ package model
 
 type Configuration struct {
 	Base
-	Price      int
-	Order      *Order
+	Price int
+
+	OrderID string
+	Order   *Order
+
+	EmployeeID string
 	Employee   *Employee
+
 	Components Components
 }
 

@@ -1,53 +1,21 @@
 package account
 
 import (
-	"github.com/go-chi/chi/v5"
-	"github.com/google/uuid"
-	"github.com/insan1a/tech-tinker/internal/delivery/http/controllers"
-	"github.com/insan1a/tech-tinker/internal/delivery/http/middleware/jwtvalidation"
-	"github.com/insan1a/tech-tinker/internal/domain/model"
-	"github.com/insan1a/tech-tinker/internal/lib/response"
 	"net/http"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/insan1a/tech-tinker/internal/domain/model"
+	"github.com/insan1a/tech-tinker/internal/lib/response"
 )
 
-type controller struct {
-	config *Config
+type Controller struct{}
+
+func New() *Controller {
+	return &Controller{}
 }
 
-func newController(cfg *Config) (*controller, error) {
-	if cfg == nil {
-		return nil, controllers.ErrConfigMissing
-	}
-
-	return &controller{
-		config: cfg,
-	}, nil
-}
-
-func MountRoutes(cfg *Config, router chi.Router) error {
-	c, err := newController(cfg)
-	if err != nil {
-		return err
-	}
-
-	router.With(
-		jwtvalidation.New(c.config.rsaPubKey),
-	).Route(
-		"/account",
-		func(r chi.Router) {
-			r.Get("/", c.HandleAccountInfo)
-			r.Route("/orders", func(r chi.Router) {
-				r.Get("/", c.HandleAccountOrders)
-				r.Get("/{orderID}", c.HandleAccountOrder)
-			})
-			r.Post("/statistics", c.HandleAccountStatistic)
-		},
-	)
-	return nil
-}
-
-func (c *controller) HandleAccountInfo(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) HandleAccountInfo(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, response.M{
 		"success": true,
 		"data": response.M{
@@ -64,7 +32,7 @@ func (c *controller) HandleAccountInfo(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (c *controller) HandleAccountOrders(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) HandleAccountOrders(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, response.M{
 		"success": true,
 		"data": response.M{
@@ -122,7 +90,7 @@ func (c *controller) HandleAccountOrders(w http.ResponseWriter, r *http.Request)
 	})
 }
 
-func (c *controller) HandleAccountOrder(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) HandleAccountOrder(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, response.M{
 		"success": true,
 		"data": response.M{
@@ -163,7 +131,7 @@ func (c *controller) HandleAccountOrder(w http.ResponseWriter, r *http.Request) 
 	})
 }
 
-func (c *controller) HandleAccountStatistic(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) HandleAccountStatistic(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, response.M{
 		"success": true,
 		"data": response.M{
