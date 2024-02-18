@@ -12,15 +12,23 @@ type Config struct {
 		TTL  time.Duration
 		Size int
 	}
-	PrivateKey *rsa.PrivateKey
+	JWT struct {
+		PrivateKey *rsa.PrivateKey
+		TTL        time.Duration
+	}
 }
 
 func NewConfig() *Config {
 	return &Config{}
 }
 
-func (c *Config) WithPublicKey(key *rsa.PrivateKey) *Config {
-	c.PrivateKey = key
+func (c *Config) WithJWTPublicKey(key *rsa.PrivateKey) *Config {
+	c.JWT.PrivateKey = key
+	return c
+}
+
+func (c *Config) WithJWTTTL(ttl time.Duration) *Config {
+	c.JWT.TTL = ttl
 	return c
 }
 

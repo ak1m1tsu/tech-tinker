@@ -6,6 +6,8 @@ import (
 	"github.com/hashicorp/golang-lru/v2/expirable"
 	"github.com/insan1a/tech-tinker/internal/domain/interfaces"
 	"github.com/insan1a/tech-tinker/internal/domain/model"
+	"github.com/insan1a/tech-tinker/internal/lib/jwt"
+	"github.com/pkg/errors"
 )
 
 var _ interfaces.AuthService = &Service{}
@@ -26,7 +28,15 @@ func New(cfg *Config, repo interfaces.EmployeeRepo) *Service {
 
 // CreateToken implements interfaces.AuthService.
 func (s *Service) CreateToken(ctx context.Context, e *model.Employee) (string, error) {
-	panic("unimplemented")
+	token, err := jwt.GenerateToken(&jwt.Employee{
+		ID:   e.ID,
+		Role: e.Role.String(),
+	}, s.cfg.JWT.TTL, s.cfg.JWT.PrivateKey)
+	if err != nil {
+		return "", errors.WithMessagef(err, "failed to generate token for user %s", e.Email)
+	}
+
+	return token, nil
 }
 
 // GetByEmail implements interfaces.AuthService.
@@ -38,7 +48,7 @@ func (s *Service) GetByEmail(ctx context.Context, email string) (*model.Employee
 
 	employee, err := s.emprepo.GetByEmail(ctx, email)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithMessagef(err, "failed to find user %s", email)
 	}
 
 	s.cache.Add(email, employee)

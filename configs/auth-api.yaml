@@ -2,8 +2,9 @@ http:
   host: 0.0.0.0
   port: 3802
   timeout: 5s
-rsa:
+jwt:
   private_key: /etc/auth-api/private.pem
+  ttl: 1h
 cache:
   ttl: 10m
   size: 1000

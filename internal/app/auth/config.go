@@ -14,10 +14,11 @@ type config struct {
 		Port    string        `yaml:"port"`
 		Timeout time.Duration `yaml:"timeout"`
 	} `yaml:"http"`
-	RSA struct {
+	JWT struct {
 		PrivateKeyPath string          `yaml:"private_key"`
 		PrivateKey     *rsa.PrivateKey `yaml:"-"`
-	}
+		TTL            time.Duration   `yaml:"ttl"`
+	} `yaml:"jwt"`
 	Cache struct {
 		TTL  time.Duration `yaml:"ttl"`
 		Size int           `yaml:"size"`
@@ -42,7 +43,7 @@ func newConfig() (*config, error) {
 		return nil, err
 	}
 
-	cfg.RSA.PrivateKey, err = rsalib.PrivateKeyFromFile(cfg.RSA.PrivateKeyPath)
+	cfg.JWT.PrivateKey, err = rsalib.PrivateKeyFromFile(cfg.JWT.PrivateKeyPath)
 	if err != nil {
 		return nil, err
 	}

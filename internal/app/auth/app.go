@@ -42,7 +42,8 @@ func Run() error {
 
 	service := authservice.New(
 		authservice.NewConfig().
-			WithPublicKey(cfg.RSA.PrivateKey).
+			WithJWTPublicKey(cfg.JWT.PrivateKey).
+			WithJWTTTL(cfg.JWT.TTL).
 			WithCacheSize(cfg.Cache.Size).
 			WithCacheTTL(cfg.Cache.TTL),
 		repo,

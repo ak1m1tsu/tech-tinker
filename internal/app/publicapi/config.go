@@ -14,10 +14,10 @@ type config struct {
 		Port    string        `yaml:"port"`
 		Timeout time.Duration `yaml:"timeout"`
 	} `yaml:"http"`
-	RSA struct {
+	JWT struct {
 		PublicKeyPath string         `yaml:"public_key"`
 		PublicKey     *rsa.PublicKey `yaml:"-"`
-	} `yaml:"rsa"`
+	} `yaml:"jwt"`
 	DB struct {
 		URL                string        `env:"DB_URL" env-required:"true"`
 		PoolSize           int32         `yaml:"pool_size"`
@@ -38,7 +38,7 @@ func newConfig() (*config, error) {
 		return nil, err
 	}
 
-	cfg.RSA.PublicKey, err = rsalib.PublicKeyFromFile(cfg.RSA.PublicKeyPath)
+	cfg.JWT.PublicKey, err = rsalib.PublicKeyFromFile(cfg.JWT.PublicKeyPath)
 	if err != nil {
 		return nil, err
 	}

@@ -28,7 +28,7 @@ func Run() error {
 	controller := accountcontroller.New()
 
 	r := router.New()
-	r.Use(jwtvalidation.New(cfg.RSA.PublicKey))
+	r.Use(jwtvalidation.New(cfg.JWT.PublicKey))
 	r.Route("/account", func(r chi.Router) {
 		r.Get("/", controller.HandleAccountInfo)
 		r.Post("/stat", controller.HandleAccountStatistic)
