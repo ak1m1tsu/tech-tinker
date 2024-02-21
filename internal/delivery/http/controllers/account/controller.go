@@ -1,195 +1,179 @@
 package account
 
 import (
+	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
-	"github.com/google/uuid"
-	"github.com/insan1a/tech-tinker/internal/delivery/http/controllers"
-	"github.com/insan1a/tech-tinker/internal/delivery/http/middleware/jwtvalidation"
-	"github.com/insan1a/tech-tinker/internal/domain/model"
+	"github.com/insan1a/tech-tinker/internal/domain/interfaces"
+	"github.com/insan1a/tech-tinker/internal/lib/appcontext"
 	"github.com/insan1a/tech-tinker/internal/lib/response"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
 )
 
-type controller struct {
-	config *Config
+type Controller struct {
+	service interfaces.AccountService
 }
 
-func newController(cfg *Config) (*controller, error) {
-	if cfg == nil {
-		return nil, controllers.ErrConfigMissing
+func New(service interfaces.AccountService) *Controller {
+	return &Controller{
+		service: service,
 	}
-
-	return &controller{
-		config: cfg,
-	}, nil
 }
 
-func MountRoutes(cfg *Config, router chi.Router) error {
-	c, err := newController(cfg)
+type AccountInfoResponse struct {
+	ID        string                `json:"id"`
+	FirstName string                `json:"first_name"`
+	LastName  string                `json:"last_name"`
+	Email     string                `json:"email"`
+	Role      string                `json:"role"`
+	Orders    AccountOrderResponses `json:"orders,omitempty"`
+}
+
+type AccountOrderResponses []AccountOrderResponse
+
+type AccountOrderResponse struct {
+	ID         string `json:"id"`
+	Number     int    `json:"number"`
+	PriceLimit int    `json:"price_limit"`
+	Comment    string `json:"comment"`
+	Address    string `json:"address"`
+	Status     string `json:"status"`
+	CreatedAt  string `json:"created_at"`
+}
+
+func (c *Controller) HandleAccountInfo(w http.ResponseWriter, r *http.Request) {
+	log := logrus.WithFields(logrus.Fields{
+		"request_id": middleware.GetReqID(r.Context()),
+		"real_ip":    r.RemoteAddr,
+		"uri":        r.RequestURI,
+		"method":     r.Method,
+	})
+
+	employeeID := appcontext.GetEmployeeID(r.Context())
+
+	account, err := c.service.GetAccount(r.Context(), employeeID)
 	if err != nil {
-		return err
+		log.WithError(err).Error("failed to find user by id")
+
+		response.InternalServerError(w)
+
+		return
 	}
 
-	router.With(
-		jwtvalidation.New(c.config.rsaPubKey),
-	).Route(
-		"/account",
-		func(r chi.Router) {
-			r.Get("/", c.HandleAccountInfo)
-			r.Route("/orders", func(r chi.Router) {
-				r.Get("/", c.HandleAccountOrders)
-				r.Get("/{orderID}", c.HandleAccountOrder)
+	var aor AccountOrderResponses
+	if account.Orders != nil {
+		aor = make(AccountOrderResponses, 0, len(account.Orders))
+		for _, order := range account.Orders {
+			aor = append(aor, AccountOrderResponse{
+				ID:         order.ID,
+				Number:     order.Number,
+				PriceLimit: order.PriceLimit,
+				Comment:    order.Comment,
+				Address:    order.Address,
+				Status:     order.Status.String(),
+				CreatedAt:  order.CreatedAt.Format(time.RFC3339),
 			})
-			r.Post("/statistics", c.HandleAccountStatistic)
-		},
-	)
-	return nil
-}
+		}
+	}
 
-func (c *controller) HandleAccountInfo(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, response.M{
 		"success": true,
 		"data": response.M{
-			"account": response.M{
-				"id":         uuid.NewString(),
-				"first_name": "Ivan",
-				"last_name":  "Ivanov",
-				"email":      "ivan.ivanov@techtinker.com",
-				"role":       model.EmployeeRoleTechnician.String(),
-				"orders":     []response.M{},
-				"created_at": "2020-01-01T00:00:00Z",
+			"account": AccountInfoResponse{
+				ID:        account.ID,
+				FirstName: account.FirstName,
+				LastName:  account.LastName,
+				Email:     account.Email,
+				Role:      account.Role.String(),
+				Orders:    aor,
 			},
 		},
 	})
 }
 
-func (c *controller) HandleAccountOrders(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) HandleAccountOrders(w http.ResponseWriter, r *http.Request) {
+	log := logrus.WithFields(logrus.Fields{
+		"request_id": middleware.GetReqID(r.Context()),
+		"real_ip":    r.RemoteAddr,
+		"uri":        r.RequestURI,
+		"method":     r.Method,
+	})
+
+	employeeID := appcontext.GetEmployeeID(r.Context())
+
+	orders, err := c.service.GetOrders(r.Context(), employeeID)
+	if err != nil {
+		log.WithError(err).Error("failed to find user by id")
+
+		response.InternalServerError(w)
+
+		return
+	}
+
 	response.JSON(w, http.StatusOK, response.M{
 		"success": true,
 		"data": response.M{
-			"orders": []response.M{
-				{
-					"id":          uuid.NewString(),
-					"number":      1,
-					"price_limit": 15000000,
-					"comment":     "this is very long comment",
-					"address":     "Irkutsk, Donskaya Street, 4, 21",
-					"status":      model.OrderStatusInProcess.String(),
-					"customer": response.M{
-						"id":           uuid.NewString(),
-						"first_name":   "Ivan",
-						"last_name":    "Ivanov",
-						"email":        "ivan.ivanov@gmail.com",
-						"phone_number": "78005553535",
-					},
-					"created_at": time.Now().Format(time.RFC3339),
-				},
-				{
-					"id":          uuid.NewString(),
-					"number":      2,
-					"price_limit": 5000000,
-					"comment":     "this is very long comment",
-					"address":     "Moscow, Lenin Street, 14, 5",
-					"status":      model.OrderStatusInProcess.String(),
-					"customer": response.M{
-						"id":           uuid.NewString(),
-						"first_name":   "Roman",
-						"last_name":    "Ivanov",
-						"email":        "roman.ivanov@gmail.com",
-						"phone_number": "78005553534",
-					},
-					"created_at": time.Now().Format(time.RFC3339),
-				},
-				{
-					"id":          uuid.NewString(),
-					"number":      3,
-					"price_limit": 25000000,
-					"comment":     "this is very long comment",
-					"address":     "Novosibirsk, Pushkin Street, 6, 85",
-					"status":      model.OrderStatusInProcess.String(),
-					"customer": response.M{
-						"id":           uuid.NewString(),
-						"first_name":   "Vasiliy",
-						"last_name":    "Ivanov",
-						"email":        "vasiliy.ivanov@gmail.com",
-						"phone_number": "78005553533",
-					},
-					"created_at": time.Now().Format(time.RFC3339),
-				},
-			},
+			"orders": orders,
 		},
 	})
 }
 
-func (c *controller) HandleAccountOrder(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) HandleAccountOrder(w http.ResponseWriter, r *http.Request) {
+	log := logrus.WithFields(logrus.Fields{
+		"request_id": middleware.GetReqID(r.Context()),
+		"real_ip":    r.RemoteAddr,
+		"uri":        r.RequestURI,
+		"method":     r.Method,
+	})
+
+	orderID := chi.URLParam(r, "orderID")
+	order, err := c.service.GetOrder(r.Context(), orderID)
+	if err != nil {
+		log.WithError(err).Error("failed to find user by id")
+
+		response.InternalServerError(w)
+
+		return
+	}
+
+	if order == nil {
+		response.NotFound(w)
+
+		return
+	}
+
 	response.JSON(w, http.StatusOK, response.M{
 		"success": true,
 		"data": response.M{
-			"order": response.M{
-				"id":          uuid.NewString(),
-				"number":      1,
-				"price_limit": 15000000,
-				"comment":     "this is very long comment",
-				"address":     "Irkutsk, Donskaya Street, 4, 21",
-				"status":      model.OrderStatusInProcess.String(),
-				"customer": response.M{
-					"id":           uuid.NewString(),
-					"first_name":   "Ivan",
-					"last_name":    "Ivanov",
-					"email":        "ivan.ivanov@gmail.com",
-					"phone_number": "78005553535",
-				},
-				"created_at": time.Now().Format(time.RFC3339),
-				"configurations": []response.M{
-					{
-						"id":         uuid.NewString(),
-						"price":      15000000,
-						"created_at": time.Now().Format(time.RFC3339),
-					},
-					{
-						"id":         uuid.NewString(),
-						"price":      14900000,
-						"created_at": time.Now().Format(time.RFC3339),
-					},
-					{
-						"id":         uuid.NewString(),
-						"price":      14500000,
-						"created_at": time.Now().Format(time.RFC3339),
-					},
-				},
-			},
+			"order": order,
 		},
 	})
 }
 
-func (c *controller) HandleAccountStatistic(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) HandleAccountStatistic(w http.ResponseWriter, r *http.Request) {
+	log := logrus.WithFields(logrus.Fields{
+		"request_id": middleware.GetReqID(r.Context()),
+		"real_ip":    r.RemoteAddr,
+		"uri":        r.RequestURI,
+		"method":     r.Method,
+	})
+
+	employeeID := appcontext.GetEmployeeID(r.Context())
+
+	statistic, err := c.service.GetStatistic(r.Context(), employeeID)
+	if err != nil {
+		log.WithError(err).Error("failed to find user by id")
+
+		response.InternalServerError(w)
+
+		return
+	}
+
 	response.JSON(w, http.StatusOK, response.M{
 		"success": true,
 		"data": response.M{
-			"statistic": response.M{
-				"from":  time.Now().Format(time.RFC3339),
-				"to":    time.Now().Add(time.Hour * 24 * 30).Format(time.RFC3339),
-				"total": 182000000,
-				"budgets": []response.M{
-					{
-						"count": 6,
-						"type":  model.BudgetTypeLowerThan50K.String(),
-					},
-					{
-						"count": 2,
-						"type":  model.BudgetTypeBetween50KAnd100K.String(),
-					},
-					{
-						"count": 2,
-						"type":  model.BudgetTypeBetween100KAnd500K.String(),
-					},
-					{
-						"count": 1,
-						"type":  model.BudgetTypeGreaterThan500K.String(),
-					},
-				},
-			},
+			"statistic": statistic,
 		},
 	})
 }

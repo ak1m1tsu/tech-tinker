@@ -1,0 +1,36 @@
+version: '3'
+networks:
+  intranet:
+    driver: bridge
+
+services:
+  proxy:
+    container_name: "api_proxy"
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./build/proxy/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - api
+    networks:
+      - intranet
+    restart: unless-stopped
+  api:
+    container_name: "public_api"
+    build:
+      context: .
+      dockerfile: ./build/api/Dockerfile
+    env_file: .env
+    networks:
+      - intranet
+    restart: unless-stopped
+  auth:
+    container_name: "auth_api"
+    build:
+      context: .
+      dockerfile: ./build/auth/Dockerfile
+    env_file: .env
+    networks:
+      - intranet
+    restart: unless-stopped

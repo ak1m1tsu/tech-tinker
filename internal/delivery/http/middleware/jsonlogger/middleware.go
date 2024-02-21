@@ -1,9 +1,11 @@
 package jsonlogger
 
 import (
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
+
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/sirupsen/logrus"
 )
 
 type wrappedResponseWriter struct {
@@ -30,14 +32,22 @@ func New(next http.Handler) http.Handler {
 		start := time.Now()
 		defer func() {
 			logrus.WithFields(logrus.Fields{
-				"uri":      r.RequestURI,
-				"method":   r.Method,
-				"status":   ww.statusCode,
-				"size":     ww.size,
-				"duration": time.Since(start).String(),
+				"uri":        r.RequestURI,
+				"method":     r.Method,
+				"status":     ww.statusCode,
+				"size":       ww.size,
+				"duration":   time.Since(start).String(),
+				"real_ip":    r.RemoteAddr,
+				"request_id": middleware.GetReqID(r.Context()),
 			}).Info("request completed")
 		}()
 
+		logrus.WithFields(logrus.Fields{
+			"uri":        r.RequestURI,
+			"method":     r.Method,
+			"real_ip":    r.RemoteAddr,
+			"request_id": middleware.GetReqID(r.Context()),
+		}).Info("request started")
 		next.ServeHTTP(ww, r)
 	}
 

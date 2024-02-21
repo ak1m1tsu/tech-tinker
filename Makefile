@@ -1,7 +1,10 @@
-.PHONY: build
-build:
-	go build -o bin/tech-tinker-api ./cmd/app/main.go
+build: build-api build-auth build-fixture
 
-.PHONY: run
-run: build
-	./bin/tech-tinker-api
+build-api:
+	GOOS=linux go build -v -o ./bin/publicapi ./cmd/api/main.go
+
+build-auth:
+	GOOS=linux go build -v -o ./bin/auth ./cmd/auth/main.go
+
+build-fixture:
+	GOOS=linux go build -v -o ./bin/fixture ./scripts/fixture/main.go

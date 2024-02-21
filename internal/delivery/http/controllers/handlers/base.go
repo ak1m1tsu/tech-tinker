@@ -1,8 +1,9 @@
-package router
+package handlers
 
 import (
-	"github.com/insan1a/tech-tinker/internal/lib/response"
 	"net/http"
+
+	"github.com/insan1a/tech-tinker/internal/lib/response"
 )
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {

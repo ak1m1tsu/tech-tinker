@@ -4,11 +4,11 @@ import "golang.org/x/crypto/bcrypt"
 
 type Employee struct {
 	Base
-	FirstName      string
-	LastName       string
-	Email          string
-	Role           EmployeeRole
-	HashedPassword HashedPassword
+	FirstName      string         `db:"first_name"`
+	LastName       string         `db:"last_name"`
+	Email          string         `db:"email"`
+	Role           EmployeeRole   `db:"role"`
+	HashedPassword HashedPassword `db:"password"`
 
 	Orders Orders
 }

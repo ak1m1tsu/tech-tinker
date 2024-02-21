@@ -3,6 +3,7 @@ package decoder
 import (
 	"crypto/rsa"
 	"encoding/base64"
+
 	"github.com/golang-jwt/jwt/v4"
 )
 

@@ -2,8 +2,9 @@ package response
 
 import (
 	"bytes"
-	"github.com/insan1a/tech-tinker/internal/lib/decoder"
 	"net/http"
+
+	"github.com/insan1a/tech-tinker/internal/lib/decoder"
 )
 
 func JSON(w http.ResponseWriter, code int, data M) {
