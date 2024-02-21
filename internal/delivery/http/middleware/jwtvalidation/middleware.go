@@ -1,18 +1,17 @@
 package jwtvalidation
 
 import (
-	"context"
 	"crypto/rsa"
 	"net/http"
 	"strings"
 
+	"github.com/insan1a/tech-tinker/internal/lib/appcontext"
 	"github.com/insan1a/tech-tinker/internal/lib/jwt"
 	"github.com/insan1a/tech-tinker/internal/lib/response"
 	"github.com/sirupsen/logrus"
 )
 
 const headerPrefix = "Bearer "
-const EmployeeIDKey = "employee_id"
 
 func New(key *rsa.PublicKey) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
@@ -37,7 +36,7 @@ func New(key *rsa.PublicKey) func(next http.Handler) http.Handler {
 				return
 			}
 
-			ctx := context.WithValue(r.Context(), EmployeeIDKey, claims.EmployeeID)
+			ctx := appcontext.WithEmployeeID(r.Context(), claims.EmployeeID)
 
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})

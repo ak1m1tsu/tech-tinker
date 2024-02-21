@@ -7,6 +7,6 @@ import (
 )
 
 type AuthService interface {
-	EmployeeRepo
+	GetByEmail(ctx context.Context, email string) (*model.Employee, error)
 	CreateToken(ctx context.Context, e *model.Employee) (string, error)
 }

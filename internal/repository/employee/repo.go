@@ -52,3 +52,31 @@ func (r *Repo) GetByEmail(ctx context.Context, email string) (*model.Employee, e
 
 	return &e, nil
 }
+
+func (r *Repo) GetByID(ctx context.Context, id string) (*model.Employee, error) {
+	psql := sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+
+	sql, args, err := psql.
+		Select("id", "email", "first_name", "last_name", "role", "password", "created_at").
+		From("employee").
+		Where(sq.Eq{"id": id}).
+		ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var employee model.Employee
+	if err = r.conn.QueryRow(ctx, sql, args...).Scan(
+		&employee.ID,
+		&employee.Email,
+		&employee.FirstName,
+		&employee.LastName,
+		&employee.Role,
+		&employee.HashedPassword,
+		&employee.CreatedAt,
+	); err != nil {
+		return nil, err
+	}
+
+	return &employee, nil
+}

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"github.com/patrickmn/go-cache"
 
 	"github.com/hashicorp/golang-lru/v2/expirable"
 	"github.com/insan1a/tech-tinker/internal/domain/interfaces"
@@ -15,6 +16,7 @@ var _ interfaces.AuthService = &Service{}
 type Service struct {
 	cfg     *Config
 	emprepo interfaces.EmployeeRepo
+	tokens  *cache.Cache
 	cache   *expirable.LRU[string, *model.Employee]
 }
 
@@ -22,12 +24,20 @@ func New(cfg *Config, repo interfaces.EmployeeRepo) *Service {
 	return &Service{
 		cfg:     cfg,
 		emprepo: repo,
+		tokens:  cache.New(cache.NoExpiration, cache.NoExpiration),
 		cache:   expirable.NewLRU[string, *model.Employee](cfg.Cache.Size, nil, cfg.Cache.TTL),
 	}
 }
 
 // CreateToken implements interfaces.AuthService.
-func (s *Service) CreateToken(ctx context.Context, e *model.Employee) (string, error) {
+func (s *Service) CreateToken(_ context.Context, e *model.Employee) (string, error) {
+	item, ok := s.tokens.Get(e.Email)
+	if ok {
+		if token, ok := item.(string); ok {
+			return token, nil
+		}
+	}
+
 	token, err := jwt.GenerateToken(&jwt.Employee{
 		ID:   e.ID,
 		Role: e.Role.String(),
@@ -35,6 +45,8 @@ func (s *Service) CreateToken(ctx context.Context, e *model.Employee) (string, e
 	if err != nil {
 		return "", errors.WithMessagef(err, "failed to generate token for user %s", e.Email)
 	}
+
+	s.tokens.Set(e.Email, token, s.cfg.JWT.TTL)
 
 	return token, nil
 }

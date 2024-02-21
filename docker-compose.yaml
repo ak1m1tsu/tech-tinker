@@ -8,9 +8,9 @@ services:
     container_name: "api_proxy"
     image: nginx:latest
     ports:
-      - 80:80
+      - "80:80"
     volumes:
-      - ${PWD}/build/proxy/nginx.conf:/etc/nginx/nginx.conf
+      - ./build/proxy/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - api
     networks:

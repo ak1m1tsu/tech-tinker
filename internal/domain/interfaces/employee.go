@@ -8,8 +8,10 @@ import (
 
 type EmployeeRepo interface {
 	GetByEmail(ctx context.Context, email string) (*model.Employee, error)
+	GetByID(ctx context.Context, id string) (*model.Employee, error)
 }
 
 type EmployeeService interface {
-	EmployeeRepo
+	GetByEmail(ctx context.Context, email string) (*model.Employee, error)
+	GetByID(ctx context.Context, id string) (*model.Employee, error)
 }

@@ -37,6 +37,7 @@ func Run() error {
 	if err != nil {
 		return err
 	}
+	defer conn.Close()
 
 	repo := emprepo.New(conn)
 
