@@ -27,6 +27,7 @@ type AccountInfoResponse struct {
 	LastName  string                `json:"last_name"`
 	Email     string                `json:"email"`
 	Role      string                `json:"role"`
+	CreatedAt string                `json:"created_at"`
 	Orders    AccountOrderResponses `json:"orders,omitempty"`
 }
 
@@ -86,6 +87,7 @@ func (c *Controller) HandleAccountInfo(w http.ResponseWriter, r *http.Request) {
 				LastName:  account.LastName,
 				Email:     account.Email,
 				Role:      account.Role.String(),
+				CreatedAt: account.CreatedAt.Format(time.RFC3339),
 				Orders:    aor,
 			},
 		},
