@@ -96,6 +96,7 @@ func (s *Service) GetOrders(ctx context.Context, id string) ([]model.Order, erro
 func (s *Service) GetOrder(ctx context.Context, id string) (*model.Order, error) {
 	order, err := s.orderRepo.GetByID(ctx, id)
 	if err != nil {
+
 		return nil, err
 	}
 

@@ -9,7 +9,8 @@ import (
 )
 
 type config struct {
-	HTTP struct {
+	Debug bool `yaml:"debug"`
+	HTTP  struct {
 		Host    string        `yaml:"host"`
 		Port    string        `yaml:"port"`
 		Timeout time.Duration `yaml:"timeout"`

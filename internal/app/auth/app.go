@@ -26,6 +26,10 @@ func Run() error {
 		return err
 	}
 
+	if cfg.Debug {
+		logrus.SetLevel(logrus.DebugLevel)
+	}
+
 	conn, err := postgresql.Connect(
 		cfg.DB.URL,
 		postgresql.NewConfig().

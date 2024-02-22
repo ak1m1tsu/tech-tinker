@@ -8,3 +8,9 @@ build-auth:
 
 build-fixture:
 	GOOS=linux go build -v -o ./bin/fixture ./scripts/fixture/main.go
+
+lint:
+	@golangci-lint run ./...
+
+test:
+	@go test --parallel=20 -cover ./...

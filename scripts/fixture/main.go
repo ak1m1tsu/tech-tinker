@@ -2,13 +2,14 @@ package main
 
 import (
 	"context"
+	"os"
+
 	"github.com/Masterminds/squirrel"
 	"github.com/ak1m1tsu/go-libs/connector/postgresql"
 	"github.com/go-faker/faker/v4"
 	"github.com/insan1a/tech-tinker/internal/domain/model"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
-	"os"
 )
 
 func main() {
@@ -17,13 +18,16 @@ func main() {
 		logrus.Fatal("DB_URL is not set")
 	}
 
-	password, _ := bcrypt.GenerateFromPassword([]byte("pa55word"), bcrypt.DefaultCost)
+	password := faker.Password()
+	logrus.Info("Password: ", password)
+
+	hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	account := model.Employee{
 		FirstName:      faker.FirstName(),
 		LastName:       faker.LastName(),
 		Email:          faker.Email(),
 		Role:           model.EmployeeRoleTechnician,
-		HashedPassword: password,
+		HashedPassword: hash,
 	}
 
 	conn, err := postgresql.Connect(dsn, nil)

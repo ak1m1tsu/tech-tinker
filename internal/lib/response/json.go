@@ -17,5 +17,5 @@ func JSON(w http.ResponseWriter, code int, data M) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
-	w.Write(buf.Bytes())
+	_, _ = w.Write(buf.Bytes())
 }

@@ -2,6 +2,8 @@ package order
 
 import (
 	"context"
+	"github.com/sirupsen/logrus"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/ak1m1tsu/go-libs/connector/postgresql"
 	"github.com/insan1a/tech-tinker/internal/domain/interfaces"
@@ -74,7 +76,7 @@ func (r *Repo) GetByID(ctx context.Context, id string) (*model.Order, error) {
 
 	sql, args, err := psql.
 		Select("id", "employee_id", "customer_id", "number", "price_limit", "comment", "address", "status", "created_at").
-		From("order").
+		From("\"order\"").
 		Where(sq.And{
 			sq.Eq{"id": id},
 			sq.Eq{"deleted_at": nil},
@@ -83,6 +85,8 @@ func (r *Repo) GetByID(ctx context.Context, id string) (*model.Order, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	logrus.Debugf("Query: %s, args: %v", sql, args)
 
 	var order model.Order
 	if err = r.conn.QueryRow(ctx, sql, args...).Scan(

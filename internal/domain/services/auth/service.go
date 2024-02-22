@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+
 	"github.com/patrickmn/go-cache"
 
 	"github.com/hashicorp/golang-lru/v2/expirable"

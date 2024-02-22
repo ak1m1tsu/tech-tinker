@@ -13,17 +13,17 @@ func TestEmployeeRole_String(t *testing.T) {
 		{
 			name: "admin",
 			e:    EmployeeRoleAdministrator,
-			want: "EmployeeRoleAdministrator",
+			want: "Administrator",
 		},
 		{
 			name: "manager",
 			e:    EmployeeRoleManager,
-			want: "EmployeeRoleManager",
+			want: "Manager",
 		},
 		{
 			name: "technician",
 			e:    EmployeeRoleTechnician,
-			want: "EmployeeRoleTechnician",
+			want: "Technician",
 		},
 	}
 	for _, tt := range tests {

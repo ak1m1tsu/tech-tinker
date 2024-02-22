@@ -1,14 +1,16 @@
 package account
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
+	"github.com/google/uuid"
 	"github.com/insan1a/tech-tinker/internal/domain/interfaces"
 	"github.com/insan1a/tech-tinker/internal/lib/appcontext"
 	"github.com/insan1a/tech-tinker/internal/lib/response"
 	"github.com/sirupsen/logrus"
-	"net/http"
-	"time"
 )
 
 type Controller struct {
@@ -16,31 +18,7 @@ type Controller struct {
 }
 
 func New(service interfaces.AccountService) *Controller {
-	return &Controller{
-		service: service,
-	}
-}
-
-type AccountInfoResponse struct {
-	ID        string                `json:"id"`
-	FirstName string                `json:"first_name"`
-	LastName  string                `json:"last_name"`
-	Email     string                `json:"email"`
-	Role      string                `json:"role"`
-	CreatedAt string                `json:"created_at"`
-	Orders    AccountOrderResponses `json:"orders,omitempty"`
-}
-
-type AccountOrderResponses []AccountOrderResponse
-
-type AccountOrderResponse struct {
-	ID         string `json:"id"`
-	Number     int    `json:"number"`
-	PriceLimit int    `json:"price_limit"`
-	Comment    string `json:"comment"`
-	Address    string `json:"address"`
-	Status     string `json:"status"`
-	CreatedAt  string `json:"created_at"`
+	return &Controller{service: service}
 }
 
 func (c *Controller) HandleAccountInfo(w http.ResponseWriter, r *http.Request) {
@@ -55,18 +33,18 @@ func (c *Controller) HandleAccountInfo(w http.ResponseWriter, r *http.Request) {
 
 	account, err := c.service.GetAccount(r.Context(), employeeID)
 	if err != nil {
-		log.WithError(err).Error("failed to find user by id")
+		log.WithError(err).Errorf("failed to find user by id [%s]", employeeID)
 
 		response.InternalServerError(w)
 
 		return
 	}
 
-	var aor AccountOrderResponses
+	var aor OrderResponses
 	if account.Orders != nil {
-		aor = make(AccountOrderResponses, 0, len(account.Orders))
+		aor = make(OrderResponses, 0, len(account.Orders))
 		for _, order := range account.Orders {
-			aor = append(aor, AccountOrderResponse{
+			aor = append(aor, OrderResponse{
 				ID:         order.ID,
 				Number:     order.Number,
 				PriceLimit: order.PriceLimit,
@@ -81,15 +59,7 @@ func (c *Controller) HandleAccountInfo(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, response.M{
 		"success": true,
 		"data": response.M{
-			"account": AccountInfoResponse{
-				ID:        account.ID,
-				FirstName: account.FirstName,
-				LastName:  account.LastName,
-				Email:     account.Email,
-				Role:      account.Role.String(),
-				CreatedAt: account.CreatedAt.Format(time.RFC3339),
-				Orders:    aor,
-			},
+			"account": FillInfo(account),
 		},
 	})
 }
@@ -106,7 +76,7 @@ func (c *Controller) HandleAccountOrders(w http.ResponseWriter, r *http.Request)
 
 	orders, err := c.service.GetOrders(r.Context(), employeeID)
 	if err != nil {
-		log.WithError(err).Error("failed to find user by id")
+		log.WithError(err).Errorf("failed to find orders for user [%s]", employeeID)
 
 		response.InternalServerError(w)
 
@@ -116,7 +86,7 @@ func (c *Controller) HandleAccountOrders(w http.ResponseWriter, r *http.Request)
 	response.JSON(w, http.StatusOK, response.M{
 		"success": true,
 		"data": response.M{
-			"orders": orders,
+			"orders": FillOrders(orders),
 		},
 	})
 }
@@ -129,18 +99,22 @@ func (c *Controller) HandleAccountOrder(w http.ResponseWriter, r *http.Request) 
 		"method":     r.Method,
 	})
 
+	employeeID := appcontext.GetEmployeeID(r.Context())
 	orderID := chi.URLParam(r, "orderID")
-	order, err := c.service.GetOrder(r.Context(), orderID)
-	if err != nil {
-		log.WithError(err).Error("failed to find user by id")
 
-		response.InternalServerError(w)
+	if _, err := uuid.Parse(orderID); err != nil {
+		log.WithError(err).Errorf("invalid order id [%s]", orderID)
+
+		response.NotFound(w)
 
 		return
 	}
 
-	if order == nil {
-		response.NotFound(w)
+	order, err := c.service.GetOrder(r.Context(), orderID)
+	if err != nil {
+		log.WithError(err).Errorf("failed to find order [%s] for user [%s]", orderID, employeeID)
+
+		response.InternalServerError(w)
 
 		return
 	}
@@ -148,7 +122,7 @@ func (c *Controller) HandleAccountOrder(w http.ResponseWriter, r *http.Request) 
 	response.JSON(w, http.StatusOK, response.M{
 		"success": true,
 		"data": response.M{
-			"order": order,
+			"order": FillOrder(order),
 		},
 	})
 }
@@ -165,7 +139,7 @@ func (c *Controller) HandleAccountStatistic(w http.ResponseWriter, r *http.Reque
 
 	statistic, err := c.service.GetStatistic(r.Context(), employeeID)
 	if err != nil {
-		log.WithError(err).Error("failed to find user by id")
+		log.WithError(err).Errorf("failed to generate statistic for user %s", employeeID)
 
 		response.InternalServerError(w)
 
@@ -175,7 +149,7 @@ func (c *Controller) HandleAccountStatistic(w http.ResponseWriter, r *http.Reque
 	response.JSON(w, http.StatusOK, response.M{
 		"success": true,
 		"data": response.M{
-			"statistic": statistic,
+			"statistic": FillStatistic(statistic),
 		},
 	})
 }
