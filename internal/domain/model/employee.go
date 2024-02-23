@@ -43,3 +43,9 @@ var employeeRoleNames = map[EmployeeRole]string{
 	EmployeeRoleTechnician:    "Technician",
 	EmployeeRoleAdministrator: "Administrator",
 }
+
+var EmployeeRoleValues = map[string]EmployeeRole{
+	"manager":       EmployeeRoleManager,
+	"technician":    EmployeeRoleTechnician,
+	"administrator": EmployeeRoleAdministrator,
+}
