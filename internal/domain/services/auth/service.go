@@ -5,10 +5,10 @@ import (
 
 	"github.com/patrickmn/go-cache"
 
+	"github.com/ak1m1tsu/tech-tinker/internal/domain/interfaces"
+	"github.com/ak1m1tsu/tech-tinker/internal/domain/model"
+	"github.com/ak1m1tsu/tech-tinker/internal/lib/jwt"
 	"github.com/hashicorp/golang-lru/v2/expirable"
-	"github.com/insan1a/tech-tinker/internal/domain/interfaces"
-	"github.com/insan1a/tech-tinker/internal/domain/model"
-	"github.com/insan1a/tech-tinker/internal/lib/jwt"
 	"github.com/pkg/errors"
 )
 

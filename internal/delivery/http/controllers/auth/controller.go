@@ -3,10 +3,10 @@ package auth
 import (
 	"net/http"
 
+	"github.com/ak1m1tsu/tech-tinker/internal/domain/interfaces"
+	"github.com/ak1m1tsu/tech-tinker/internal/lib/decoder"
+	"github.com/ak1m1tsu/tech-tinker/internal/lib/response"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/insan1a/tech-tinker/internal/domain/interfaces"
-	"github.com/insan1a/tech-tinker/internal/lib/decoder"
-	"github.com/insan1a/tech-tinker/internal/lib/response"
 	"github.com/sirupsen/logrus"
 )
 

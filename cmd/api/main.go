@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	app "github.com/insan1a/tech-tinker/internal/app/publicapi"
+	app "github.com/ak1m1tsu/tech-tinker/internal/app/publicapi"
 	"github.com/sirupsen/logrus"
 )
 

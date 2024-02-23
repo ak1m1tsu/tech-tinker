@@ -1,8 +1,9 @@
 package account
 
 import (
-	"github.com/insan1a/tech-tinker/internal/domain/model"
 	"time"
+
+	"github.com/ak1m1tsu/tech-tinker/internal/domain/model"
 )
 
 func FillInfo(employee *model.Employee) InfoResponse {

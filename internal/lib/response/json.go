@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"net/http"
 
-	"github.com/insan1a/tech-tinker/internal/lib/decoder"
+	"github.com/ak1m1tsu/tech-tinker/internal/lib/decoder"
 )
 
 func JSON(w http.ResponseWriter, code int, data M) {

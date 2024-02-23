@@ -1,15 +1,17 @@
 package account
 
 import (
+	"errors"
 	"net/http"
-	"time"
 
+	"github.com/ak1m1tsu/tech-tinker/internal/domain/interfaces"
+	"github.com/ak1m1tsu/tech-tinker/internal/domain/services/account"
+	"github.com/ak1m1tsu/tech-tinker/internal/lib/appcontext"
+	"github.com/ak1m1tsu/tech-tinker/internal/lib/decoder"
+	"github.com/ak1m1tsu/tech-tinker/internal/lib/response"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
-	"github.com/insan1a/tech-tinker/internal/domain/interfaces"
-	"github.com/insan1a/tech-tinker/internal/lib/appcontext"
-	"github.com/insan1a/tech-tinker/internal/lib/response"
 	"github.com/sirupsen/logrus"
 )
 
@@ -38,22 +40,6 @@ func (c *Controller) HandleAccountInfo(w http.ResponseWriter, r *http.Request) {
 		response.InternalServerError(w)
 
 		return
-	}
-
-	var aor OrderResponses
-	if account.Orders != nil {
-		aor = make(OrderResponses, 0, len(account.Orders))
-		for _, order := range account.Orders {
-			aor = append(aor, OrderResponse{
-				ID:         order.ID,
-				Number:     order.Number,
-				PriceLimit: order.PriceLimit,
-				Comment:    order.Comment,
-				Address:    order.Address,
-				Status:     order.Status.String(),
-				CreatedAt:  order.CreatedAt.Format(time.RFC3339),
-			})
-		}
 	}
 
 	response.JSON(w, http.StatusOK, response.M{
@@ -114,6 +100,12 @@ func (c *Controller) HandleAccountOrder(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		log.WithError(err).Errorf("failed to find order [%s] for user [%s]", orderID, employeeID)
 
+		if errors.Is(err, account.ErrOrderNotFound) {
+			response.NotFound(w)
+
+			return
+		}
+
 		response.InternalServerError(w)
 
 		return
@@ -134,6 +126,19 @@ func (c *Controller) HandleAccountStatistic(w http.ResponseWriter, r *http.Reque
 		"uri":        r.RequestURI,
 		"method":     r.Method,
 	})
+
+	var input struct {
+		From string `json:"from"`
+		To   string `json:"to"`
+	}
+
+	if err := decoder.DecodeJSON(r.Body, &input); err != nil {
+		log.WithError(err).Errorf("failed to parse request body")
+
+		response.BadRequest(w, "bad request body")
+
+		return
+	}
 
 	employeeID := appcontext.GetEmployeeID(r.Context())
 

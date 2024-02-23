@@ -6,8 +6,8 @@ import (
 
 	"github.com/Masterminds/squirrel"
 	"github.com/ak1m1tsu/go-libs/connector/postgresql"
+	"github.com/ak1m1tsu/tech-tinker/internal/domain/model"
 	"github.com/go-faker/faker/v4"
-	"github.com/insan1a/tech-tinker/internal/domain/model"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )

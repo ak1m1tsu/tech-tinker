@@ -2,12 +2,13 @@ package order
 
 import (
 	"context"
+
 	"github.com/sirupsen/logrus"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/ak1m1tsu/go-libs/connector/postgresql"
-	"github.com/insan1a/tech-tinker/internal/domain/interfaces"
-	"github.com/insan1a/tech-tinker/internal/domain/model"
+	"github.com/ak1m1tsu/tech-tinker/internal/domain/interfaces"
+	"github.com/ak1m1tsu/tech-tinker/internal/domain/model"
 )
 
 var _ interfaces.OrderRepo = &Repo{}

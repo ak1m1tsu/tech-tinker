@@ -3,11 +3,14 @@ package account
 import (
 	"cmp"
 	"context"
+	"errors"
 	"slices"
 
+	"github.com/jackc/pgx/v5"
+
+	"github.com/ak1m1tsu/tech-tinker/internal/domain/interfaces"
+	"github.com/ak1m1tsu/tech-tinker/internal/domain/model"
 	"github.com/hashicorp/golang-lru/v2/expirable"
-	"github.com/insan1a/tech-tinker/internal/domain/interfaces"
-	"github.com/insan1a/tech-tinker/internal/domain/model"
 )
 
 var _ interfaces.AccountService = (*Service)(nil)
@@ -16,6 +19,7 @@ type Service struct {
 	employeeRepo interfaces.EmployeeRepo
 	customerRepo interfaces.CustomerRepo
 	orderRepo    interfaces.OrderRepo
+	errors       *expirable.LRU[string, error]
 	cache        *expirable.LRU[string, *model.Employee]
 }
 
@@ -28,6 +32,7 @@ func New(cfg *Config,
 		employeeRepo: employeeRepo,
 		customerRepo: customerRepo,
 		orderRepo:    orderRepo,
+		errors:       expirable.NewLRU[string, error](cfg.Cache.Size, nil, cfg.Cache.TTL),
 		cache:        expirable.NewLRU[string, *model.Employee](cfg.Cache.Size, nil, cfg.Cache.TTL),
 	}
 }
@@ -94,8 +99,17 @@ func (s *Service) GetOrders(ctx context.Context, id string) ([]model.Order, erro
 }
 
 func (s *Service) GetOrder(ctx context.Context, id string) (*model.Order, error) {
+	if err, ok := s.errors.Get(id); ok {
+		return nil, err
+	}
+
 	order, err := s.orderRepo.GetByID(ctx, id)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			err = errors.Join(err, ErrOrderNotFound)
+			s.errors.Add(id, err)
+			return nil, err
+		}
 
 		return nil, err
 	}
@@ -104,5 +118,6 @@ func (s *Service) GetOrder(ctx context.Context, id string) (*model.Order, error)
 }
 
 func (s *Service) GetStatistic(ctx context.Context, id string) (*model.Stat, error) {
+
 	return nil, nil
 }

@@ -3,7 +3,7 @@ package util
 import (
 	"context"
 
-	"github.com/insan1a/tech-tinker/internal/domain/model"
+	"github.com/ak1m1tsu/tech-tinker/internal/domain/model"
 )
 
 func EmployeeFromContext(ctx context.Context) *model.Employee {

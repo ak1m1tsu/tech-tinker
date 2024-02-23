@@ -1,8 +1,6 @@
-module github.com/insan1a/tech-tinker
+module github.com/ak1m1tsu/tech-tinker
 
-go 1.21.5
-
-toolchain go1.22.0
+go 1.22.0
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
