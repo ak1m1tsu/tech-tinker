@@ -3,6 +3,7 @@ package account
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/ak1m1tsu/tech-tinker/internal/domain/interfaces"
 	"github.com/ak1m1tsu/tech-tinker/internal/domain/services/account"
@@ -140,11 +141,31 @@ func (c *Controller) HandleAccountStatistic(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	from, err := time.Parse(time.RFC3339, input.From)
+	if err != nil {
+		log.WithError(err).Errorf("failed to parse from date [%s]", input.From)
+		response.BadRequest(w, "bad date from")
+		return
+	}
+
+	to, err := time.Parse(time.RFC3339, input.To)
+	if err != nil {
+		log.WithError(err).Errorf("failed to parse to date [%s]", input.To)
+		response.BadRequest(w, "bad date to")
+		return
+	}
+
 	employeeID := appcontext.GetEmployeeID(r.Context())
 
-	statistic, err := c.service.GetStatistic(r.Context(), employeeID)
+	statistic, err := c.service.GetStatistic(r.Context(), employeeID, from, to)
 	if err != nil {
 		log.WithError(err).Errorf("failed to generate statistic for user %s", employeeID)
+
+		if errors.Is(err, account.ErrInvalidDateRange) {
+			response.BadRequest(w, "invalid date range")
+
+			return
+		}
 
 		response.InternalServerError(w)
 
