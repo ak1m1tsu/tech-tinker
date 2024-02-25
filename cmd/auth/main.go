@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	app "github.com/insan1a/tech-tinker/internal/app/auth"
+	app "github.com/ak1m1tsu/tech-tinker/internal/app/auth"
 	"github.com/sirupsen/logrus"
 )
 

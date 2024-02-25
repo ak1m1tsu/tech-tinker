@@ -1,11 +1,11 @@
 package router
 
 import (
+	"github.com/ak1m1tsu/tech-tinker/internal/delivery/http/controllers/handlers"
+	"github.com/ak1m1tsu/tech-tinker/internal/delivery/http/middleware/jsonlogger"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	"github.com/insan1a/tech-tinker/internal/delivery/http/controllers/handlers"
-	"github.com/insan1a/tech-tinker/internal/delivery/http/middleware/jsonlogger"
 )
 
 type Router struct {

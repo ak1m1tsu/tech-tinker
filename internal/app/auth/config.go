@@ -4,12 +4,13 @@ import (
 	"crypto/rsa"
 	"time"
 
+	rsalib "github.com/ak1m1tsu/tech-tinker/internal/lib/rsa"
 	"github.com/ilyakaznacheev/cleanenv"
-	rsalib "github.com/insan1a/tech-tinker/internal/lib/rsa"
 )
 
 type config struct {
-	HTTP struct {
+	Debug bool `yaml:"debug"`
+	HTTP  struct {
 		Host    string        `yaml:"host"`
 		Port    string        `yaml:"port"`
 		Timeout time.Duration `yaml:"timeout"`

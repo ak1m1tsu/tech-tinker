@@ -11,11 +11,11 @@ import (
 	"syscall"
 
 	"github.com/ak1m1tsu/go-libs/connector/postgresql"
+	authcontroller "github.com/ak1m1tsu/tech-tinker/internal/delivery/http/controllers/auth"
+	"github.com/ak1m1tsu/tech-tinker/internal/delivery/http/router"
+	authservice "github.com/ak1m1tsu/tech-tinker/internal/domain/services/auth"
+	emprepo "github.com/ak1m1tsu/tech-tinker/internal/repository/employee"
 	"github.com/go-chi/chi/v5"
-	authcontroller "github.com/insan1a/tech-tinker/internal/delivery/http/controllers/auth"
-	"github.com/insan1a/tech-tinker/internal/delivery/http/router"
-	authservice "github.com/insan1a/tech-tinker/internal/domain/services/auth"
-	emprepo "github.com/insan1a/tech-tinker/internal/repository/employee"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 )
@@ -24,6 +24,10 @@ func Run() error {
 	cfg, err := newConfig()
 	if err != nil {
 		return err
+	}
+
+	if cfg.Debug {
+		logrus.SetLevel(logrus.DebugLevel)
 	}
 
 	conn, err := postgresql.Connect(

@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/insan1a/tech-tinker/internal/lib/response"
+	"github.com/ak1m1tsu/tech-tinker/internal/lib/response"
 )
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {

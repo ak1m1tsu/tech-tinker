@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/insan1a/tech-tinker/internal/lib/appcontext"
-	"github.com/insan1a/tech-tinker/internal/lib/jwt"
-	"github.com/insan1a/tech-tinker/internal/lib/response"
+	"github.com/ak1m1tsu/tech-tinker/internal/lib/appcontext"
+	"github.com/ak1m1tsu/tech-tinker/internal/lib/jwt"
+	"github.com/ak1m1tsu/tech-tinker/internal/lib/response"
 	"github.com/sirupsen/logrus"
 )
 

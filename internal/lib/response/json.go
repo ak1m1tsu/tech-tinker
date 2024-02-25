@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"net/http"
 
-	"github.com/insan1a/tech-tinker/internal/lib/decoder"
+	"github.com/ak1m1tsu/tech-tinker/internal/lib/decoder"
 )
 
 func JSON(w http.ResponseWriter, code int, data M) {
@@ -17,5 +17,5 @@ func JSON(w http.ResponseWriter, code int, data M) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
-	w.Write(buf.Bytes())
+	_, _ = w.Write(buf.Bytes())
 }

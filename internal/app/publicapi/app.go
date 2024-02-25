@@ -4,24 +4,25 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/ak1m1tsu/go-libs/connector/postgresql"
-	accountservice "github.com/insan1a/tech-tinker/internal/domain/services/account"
-	customerrepo "github.com/insan1a/tech-tinker/internal/repository/customer"
-	employeerepo "github.com/insan1a/tech-tinker/internal/repository/employee"
-	orderrepo "github.com/insan1a/tech-tinker/internal/repository/order"
 	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/ak1m1tsu/go-libs/connector/postgresql"
+	accountservice "github.com/ak1m1tsu/tech-tinker/internal/domain/services/account"
+	customerrepo "github.com/ak1m1tsu/tech-tinker/internal/repository/customer"
+	employeerepo "github.com/ak1m1tsu/tech-tinker/internal/repository/employee"
+	orderrepo "github.com/ak1m1tsu/tech-tinker/internal/repository/order"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 
-	accountcontroller "github.com/insan1a/tech-tinker/internal/delivery/http/controllers/account"
-	"github.com/insan1a/tech-tinker/internal/delivery/http/middleware/jwtvalidation"
-	"github.com/insan1a/tech-tinker/internal/delivery/http/router"
+	accountcontroller "github.com/ak1m1tsu/tech-tinker/internal/delivery/http/controllers/account"
+	"github.com/ak1m1tsu/tech-tinker/internal/delivery/http/middleware/jwtvalidation"
+	"github.com/ak1m1tsu/tech-tinker/internal/delivery/http/router"
 )
 
 func Run() error {

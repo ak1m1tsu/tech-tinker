@@ -6,7 +6,7 @@ import (
 )
 
 func DecodeJSON(r io.Reader, v interface{}) error {
-	defer io.Copy(io.Discard, r)
+	defer func() { _, _ = io.Copy(io.Discard, r) }()
 	decoder := json.NewDecoder(r)
 	decoder.DisallowUnknownFields()
 	return decoder.Decode(v)
