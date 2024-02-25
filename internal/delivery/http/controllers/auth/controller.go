@@ -33,7 +33,7 @@ func (c *Controller) HandleAuthToken(w http.ResponseWriter, r *http.Request) {
 	if err := decoder.DecodeJSON(r.Body, &input); err != nil {
 		log.WithError(err).Error("failed to decode request body")
 
-		response.BadRequest(w, err.Error())
+		response.BadRequest(w, "invalid request body")
 
 		return
 	}
